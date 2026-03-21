@@ -14,24 +14,24 @@ except Exception as e:
 
 unwanted_chars = ['.', ',', '!', '?']
 
-monologue = content
-
-
-monologue.lower()
-for c in unwanted_chars:
-    monologue = monologue.strip(c)
-    
-monologue_list = monologue.split(' ')
-
+lyrics = content.split('\n')
 
 vt = voice_to_text.VoiceToText()
 
-spoken = ''
-while not spoken == monologue:
-    spoken = vt.transcribe_voice()
-    spoken.lower()
-    if spoken == monologue:
-        print("You completed your training!")
+for line in lyrics:
+    for c in unwanted_chars:
+         line = line.replace(c, '')
+        
+    line = line.lower()
+    spoken = ''
+    while not spoken == line:
+        spoken = vt.transcribe_voice()
+        spoken = spoken.lower()
+        print(line)
+        print(spoken)
+        if not spoken == line:
+            print("That wasn't quite right, try again!")
+            
 
 # for word in monologue_list:
 #     guess = ''
