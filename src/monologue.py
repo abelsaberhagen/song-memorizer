@@ -1,8 +1,21 @@
 import voice_to_text
 
+file_path = 'src/lyrics.txt'
+content = ''
+
+try:
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+        print(content)
+except FileNotFoundError:
+    print(f"Error: The file '{file_path}' was not found.")
+except Exception as e:
+    print(f"An error occurred: {e}")
+
 unwanted_chars = ['.', ',', '!', '?']
 
-monologue = "I want to go to France"
+monologue = content
+
 
 monologue.lower()
 for c in unwanted_chars:
