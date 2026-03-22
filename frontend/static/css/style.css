@@ -29,6 +29,8 @@ body {
 .orb2 { width: 420px; height: 420px; background: #bbbe18; bottom: -80px; right: -80px; animation-delay: -5s; }
 .orb3 { width: 320px; height: 320px; background: #077a46; top: 35%; left: 38%; animation-delay: -9s; }
 @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(35px,25px) scale(1.1); } }
+
+img { width: 300px; height: auto; }
  
 main { position: relative; z-index: 1; width: 100%; max-width: 640px; padding: 2rem; }
 .screen { display: none; }
