@@ -14,6 +14,8 @@ CORS(app)
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "../uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+for f in os.listdir(UPLOAD_FOLDER):
+    os.remove(os.path.join(UPLOAD_FOLDER, f))
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 ALLOWED_AUDIO = {"mp3", "wav", "ogg", "m4a", "webm"}
