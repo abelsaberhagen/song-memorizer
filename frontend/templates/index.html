@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎤 Song Memorizer</title>
+  <title>🎤 Lyricize</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css"/>
@@ -14,13 +14,14 @@
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
+    <img src="/static/cactus-removebg-preview.png" alt="cactus">
   </div>
  
   <main>
  
     <!-- ── UPLOAD SCREEN ── -->
     <section id="upload-screen" class="screen active">
-      <h1>SING<span class="dot">.</span></h1>
+      <h1>LYRICIZE</span></h1>
       <p class="subtitle">Upload your track & lyrics — then sing from memory</p>
  
       <div class="card">
@@ -38,6 +39,11 @@
  
         <button id="start-btn" disabled>LET'S GO →</button>
       </div>
+
+      <div class="preset-divider"><span>or pick a song</span></div>
+
+      <div id="preset-list" class="preset-list"></div>
+
     </section>
  
     <!-- ── KARAOKE SCREEN ── -->

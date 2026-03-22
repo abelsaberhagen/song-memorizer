@@ -16,6 +16,7 @@ const listenBtn    = document.getElementById("listen-btn");
 const feedbackBox  = document.getElementById("feedback-box");
 const progressBar  = document.getElementById("progress-bar");
 const backBtn      = document.getElementById("back-btn");
+const presetList   = document.getElementById("preset-list");
  
 // ── State ─────────────────────────────────────────────────────────────────────
 let lyrics         = [];
@@ -231,3 +232,37 @@ backBtn.addEventListener("click", () => {
   startBtn.textContent = "LET'S GO →";
   startBtn.disabled = false;
 });
+
+// ── Presets ───────────────────────────────────────────────────────────────────
+async function loadPresets() {
+  try {
+    const res   = await fetch(`${API}/presets`);
+    const songs = await res.json();
+    presetList.innerHTML = "";
+    songs.forEach(song => {
+      const btn = document.createElement("button");
+      btn.className = "preset-btn";
+      btn.textContent = song.name;
+      btn.addEventListener("click", () => selectPreset(song.id));
+      presetList.appendChild(btn);
+    });
+  } catch (e) {
+    // no presets available, hide the section silently
+  }
+}
+
+async function selectPreset(id) {
+  try {
+    const res  = await fetch(`${API}/presets/${id}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    lyrics    = data.lyrics;
+    lineIndex = 0;
+    showKaraokeScreen();
+  } catch (err) {
+    alert("Could not load preset: " + err.message);
+  }
+}
+
+loadPresets();

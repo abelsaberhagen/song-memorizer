@@ -1,12 +1,12 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
  
 :root {
-  --bg: #080810;
+  --bg: #4fc0ea;
   --surface: rgba(255,255,255,0.04);
   --border: rgba(255,255,255,0.08);
-  --accent: #e8ff47;
-  --accent2: #ff4fd8;
-  --text: #f0f0f0;
+  --accent: #ffc247;
+  --accent2: #c5d913;
+  --text: #000000;
   --muted: #555;
   --radius: 18px;
 }
@@ -24,9 +24,9 @@ body {
  
 .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.2; animation: drift 14s ease-in-out infinite alternate; }
-.orb1 { width: 560px; height: 560px; background: #6d28d9; top: -120px; left: -120px; }
-.orb2 { width: 420px; height: 420px; background: #be185d; bottom: -80px; right: -80px; animation-delay: -5s; }
-.orb3 { width: 320px; height: 320px; background: #0284c7; top: 35%; left: 38%; animation-delay: -9s; }
+.orb1 { width: 560px; height: 560px; background: #d98328; top: -120px; left: -120px; }
+.orb2 { width: 420px; height: 420px; background: #bbbe18; bottom: -80px; right: -80px; animation-delay: -5s; }
+.orb3 { width: 320px; height: 320px; background: #077a46; top: 35%; left: 38%; animation-delay: -9s; }
 @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(35px,25px) scale(1.1); } }
  
 main { position: relative; z-index: 1; width: 100%; max-width: 640px; padding: 2rem; }
@@ -152,4 +152,21 @@ button {
  
 .progress-wrap { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
 .progress-bar  { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .5s ease; border-radius: 99px; }
+
+.preset-divider { display: flex; align-items: center; gap: .8rem; color: var(--muted); font-size: .8rem; letter-spacing: 2px; text-transform: uppercase; }
+.preset-divider::before, .preset-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+.preset-list { display: flex; flex-wrap: wrap; gap: .7rem; }
+.preset-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 99px;
+  padding: .6rem 1.4rem;
+  font-size: .9rem;
+  letter-spacing: 1px;
+  backdrop-filter: blur(12px);
+  transition: all .2s;
+}
+.preset-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
  
