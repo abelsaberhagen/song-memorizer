@@ -1,3 +1,4 @@
+import os
 import speech_recognition as sr
 
 class VoiceToText:
@@ -6,6 +7,32 @@ class VoiceToText:
         pass
 
     # Initialize the recognizer
+
+    def transcribe_file(self, file_path):
+        import tempfile
+        from pydub import AudioSegment
+
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+            wav_path = tmp.name
+
+        try:
+            audio = AudioSegment.from_file(file_path)
+            audio.export(wav_path, format="wav")
+
+            r = sr.Recognizer()
+            with sr.AudioFile(wav_path) as source:
+                audio_data = r.record(source)
+            try:
+                text = r.recognize_google(audio_data)
+                return text
+            except sr.UnknownValueError:
+                print("Speech Recognition could not understand audio")
+            except sr.RequestError as e:
+                print(f"Could not request results from Google Speech Recognition service; {e}")
+        finally:
+            os.remove(wav_path)
+
+        return None
 
     def transcribe_voice(self):
         r = sr.Recognizer()
@@ -29,3 +56,5 @@ class VoiceToText:
             print("Speech Recognition could not understand audio")
         except sr.RequestError as e:
             print(f"Could not request results from Google Speech Recognition service; {e}")
+
+    
