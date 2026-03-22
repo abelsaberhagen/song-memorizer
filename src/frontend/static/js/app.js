@@ -8,6 +8,7 @@ const audioDrop    = document.getElementById("audio-drop");
 const audioLabel   = document.getElementById("audio-label");
 const lyricsInput  = document.getElementById("lyrics-input");
 const startBtn     = document.getElementById("start-btn");
+const audioPlayer  = document.getElementById("audio-player");
 const lineCounter  = document.getElementById("line-counter");
 const stageLabel   = document.getElementById("stage-label");
 const micRing      = document.getElementById("mic-ring");
@@ -42,7 +43,7 @@ audioInput.addEventListener("change", () => {
 lyricsInput.addEventListener("input", updateStartBtn);
  
 function updateStartBtn() {
-  startBtn.disabled = !(audioFile && lyricsInput.value.trim().length > 0);
+  startBtn.disabled = !(lyricsInput.value.trim().length > 0);
 }
  
 startBtn.addEventListener("click", async () => {
@@ -60,6 +61,7 @@ startBtn.addEventListener("click", async () => {
  
     lyrics    = data.lyrics;
     lineIndex = 0;
+    audioPlayer.src = `${API}/audio/${data.filename}`;
     showKaraokeScreen();
  
   } catch (err) {
@@ -92,7 +94,7 @@ function renderState() {
   }
  
   lineCounter.textContent = `Line ${lineIndex + 1} of ${lyrics.length}`;
-  stageLabel.textContent  = "Tap to sing";
+  stageLabel.textContent  = "Press play, then tap to sing";
   progressBar.style.width = `${(lineIndex / lyrics.length) * 100}%`;
 }
  
@@ -102,22 +104,6 @@ listenBtn.addEventListener("click", () => {
   else startRecording();
 });
  
-function playStartBeep() {
-  return new Promise(resolve => {
-    const ctx  = new AudioContext();
-    const osc  = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.4, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.3);
-    osc.onended = () => { ctx.close(); resolve(); };
-  });
-}
-
 async function startRecording() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -132,8 +118,6 @@ async function startRecording() {
       stream.getTracks().forEach(t => t.stop());
       submitRecording();
     };
- 
-    await playStartBeep();
  
     mediaRecorder.start();
     isRecording = true;
@@ -174,9 +158,9 @@ async function submitRecording() {
     setRingState(result.correct ? "correct" : "wrong");
  
     if (result.correct) {
-      setTimeout(() => { lineIndex++; renderState(); if (lineIndex < lyrics.length) startRecording(); }, 1400);
+      setTimeout(() => { lineIndex++; renderState(); }, 1400);
     } else {
-      setTimeout(startRecording, 2200);
+      setTimeout(renderState, 2200);
     }
  
   } catch (err) {
@@ -226,6 +210,7 @@ function hideFeedback() {
 // ── Back button ───────────────────────────────────────────────────────────────
 backBtn.addEventListener("click", () => {
   if (isRecording) stopRecording();
+  audioPlayer.pause();
   karaokeScreen.classList.remove("active");
   uploadScreen.classList.add("active");
   startBtn.textContent = "LET'S GO →";
