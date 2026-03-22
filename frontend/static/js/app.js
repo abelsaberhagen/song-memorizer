@@ -17,11 +17,13 @@ const feedbackBox  = document.getElementById("feedback-box");
 const progressBar  = document.getElementById("progress-bar");
 const backBtn      = document.getElementById("back-btn");
 const presetList   = document.getElementById("preset-list");
+const audioPlayer  = document.getElementById("audio-player");
  
 // ── State ─────────────────────────────────────────────────────────────────────
 let lyrics         = [];
 let lineIndex      = 0;
 let audioFile      = null;
+let audioSrc       = null;
 let mediaRecorder  = null;
 let recordedChunks = [];
 let isRecording    = false;
@@ -61,6 +63,8 @@ startBtn.addEventListener("click", async () => {
  
     lyrics    = data.lyrics;
     lineIndex = 0;
+    audioSrc  = `${API}/audio/${data.filename}`;
+    audioPlayer.src = audioSrc;
     showKaraokeScreen();
  
   } catch (err) {
@@ -135,6 +139,8 @@ async function startRecording() {
     };
  
     await playStartBeep();
+    audioPlayer.currentTime = 0;
+    audioPlayer.play().catch(() => {});
  
     mediaRecorder.start();
     isRecording = true;
@@ -227,6 +233,8 @@ function hideFeedback() {
 // ── Back button ───────────────────────────────────────────────────────────────
 backBtn.addEventListener("click", () => {
   if (isRecording) stopRecording();
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
   karaokeScreen.classList.remove("active");
   uploadScreen.classList.add("active");
   startBtn.textContent = "LET'S GO →";
@@ -259,6 +267,8 @@ async function selectPreset(id) {
 
     lyrics    = data.lyrics;
     lineIndex = 0;
+    audioSrc  = data.audio_url ? `${API}${data.audio_url}` : null;
+    if (audioSrc) audioPlayer.src = audioSrc;
     showKaraokeScreen();
   } catch (err) {
     alert("Could not load preset: " + err.message);
