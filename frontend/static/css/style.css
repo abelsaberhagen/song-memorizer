@@ -1,6 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
  
 :root {
+  
   --bg: #4fc0ea;
   --surface: rgba(255,255,255,0.04);
   --border: rgba(255,255,255,0.08);
@@ -12,7 +13,7 @@
 }
  
 body {
-  background: var(--bg);
+  background: url("/static/cactus_in_desert.png") center/cover no-repeat fixed;
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
