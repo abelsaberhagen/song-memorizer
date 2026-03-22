@@ -12,6 +12,9 @@ app = Flask(
 )
 CORS(app)
 
+PRESETS_FOLDER = os.path.join(os.path.dirname(__file__), "../presets")
+os.makedirs(PRESETS_FOLDER, exist_ok=True)
+
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "../uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 for f in os.listdir(UPLOAD_FOLDER):
@@ -54,6 +57,58 @@ def upload():
             lines.append(line)
 
     return jsonify({"filename": filename, "lyrics": lines})
+
+
+@app.route("/presets")
+def list_presets():
+    songs = []
+    for fname in sorted(os.listdir(PRESETS_FOLDER)):
+        name, ext = os.path.splitext(fname)
+        if ext == ".txt":
+            songs.append({"id": name, "name": name.replace("_", " ").title()})
+    return jsonify(songs)
+
+
+@app.route("/presets/<song_id>")
+def load_preset(song_id):
+    txt_path = os.path.join(PRESETS_FOLDER, f"{song_id}.txt")
+    if not os.path.exists(txt_path):
+        return jsonify({"error": "Preset not found"}), 404
+
+    with open(txt_path, encoding="utf-8") as f:
+        lyrics_text = f.read()
+
+    audio_file = next(
+        (f for f in os.listdir(PRESETS_FOLDER)
+         if os.path.splitext(f)[0] == song_id and os.path.splitext(f)[1] != ".txt"),
+        None
+    )
+
+    unwanted = ['.', ',', '!', '?']
+    lines = []
+    for line in lyrics_text.split("\n"):
+        for c in unwanted:
+            line = line.replace(c, "")
+        line = line.strip().lower()
+        if line:
+            lines.append(line)
+
+    return jsonify({
+        "lyrics": lines,
+        "audio_url": f"/presets/{song_id}/audio" if audio_file else None
+    })
+
+
+@app.route("/presets/<song_id>/audio")
+def serve_preset_audio(song_id):
+    audio_file = next(
+        (f for f in os.listdir(PRESETS_FOLDER)
+         if os.path.splitext(f)[0] == song_id and os.path.splitext(f)[1] != ".txt"),
+        None
+    )
+    if not audio_file:
+        return jsonify({"error": "Audio not found"}), 404
+    return send_from_directory(PRESETS_FOLDER, audio_file)
 
 
 @app.route("/audio/<filename>")
